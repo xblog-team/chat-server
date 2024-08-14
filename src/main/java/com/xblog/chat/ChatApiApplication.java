@@ -1,4 +1,4 @@
-package com.xblog.chatApi;
+package com.xblog.chat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
