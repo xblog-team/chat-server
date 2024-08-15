@@ -1,4 +1,4 @@
-package com.xblog.chat.chatRoom;
+package com.xblog.chat.chatroom;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChatRoomService {
-	private final int MAX_SESSION_SIZE = 20;
-	private Map<String, ChatRoom> rooms = new HashMap<>();
+	private static final int MAX_SESSION_SIZE = 20;
+	private final Map<String, ChatRoom> rooms = new HashMap<>();
 
 	public ChatRoom findAvailableRoom() {
 		Optional<ChatRoom> availableRoom = rooms.values().stream()
-			.filter(room -> !room.isFull(MAX_SESSION_SIZE)).findFirst();
+			.filter(room -> !room.isFull()).findFirst();
 
 		return availableRoom.orElse(createChatRoom());
 	}
@@ -23,7 +23,7 @@ public class ChatRoomService {
 		while (rooms.containsKey(roomId)) {
 			roomId = createChatRoomId();
 		}
-		ChatRoom chatRoom = new ChatRoom(roomId);
+		ChatRoom chatRoom = new ChatRoom(roomId, MAX_SESSION_SIZE);
 		rooms.put(roomId, chatRoom);
 
 		return chatRoom;
@@ -36,6 +36,6 @@ public class ChatRoomService {
 	}
 
 	public String createChatRoomId() {
-		return "room-" + (int) (Math.random() * 10000);
+		return "room-" + (int)(Math.random() * 10000);
 	}
 }
