@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.xblog</groupId>
-	<artifactId>chatApi</artifactId>
+	<artifactId>chat-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>chatApi</name>
 	<description>chat-api</description>

@@ -10,8 +10,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.xblog.chat.chatRoom.ChatRoom;
-import com.xblog.chat.chatRoom.ChatRoomService;
+import com.xblog.chat.chatroom.ChatRoom;
+import com.xblog.chat.chatroom.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,22 +23,22 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 	private final ChatRoomService chatRoomService;
 
-	private Map<WebSocketSession, ChatRoom> chatRoomMap = new ConcurrentHashMap<>();
+	private final Map<WebSocketSession, ChatRoom> chatRoomMap = new ConcurrentHashMap<>();
 	private final Map<WebSocketSession, String> guestNicknameMap = new ConcurrentHashMap<>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		String userId = session.getHandshakeHeaders().getFirst("user_id");
-		String nickname = "";
+		String nickname;
 		if (StringUtils.hasText(userId)) {
 			nickname = getNicknameFromUserId(userId);
 		} else {
 			nickname = createGuestNickname();
-			while (isNicknameTaken(nickname)) {
+			while (guestNicknameMap.containsValue(nickname)) {
 				nickname = createGuestNickname();
 			}
 		}
-		
+
 		Map<String, Object> attributes = session.getAttributes();
 		attributes.put("nickname", nickname);
 
@@ -52,7 +52,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
 		ChatRoom room = chatRoomMap.get(session);
 		room.removeSession(session);
 		chatRoomService.removeRoomIfEmpty(room);
@@ -78,11 +78,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	private String createGuestNickname() {
-		return "Guest-" + (int) (Math.random() * 10000);
+		return "Guest-" + (int)(Math.random() * 10000);
 	}
-
-	private boolean isNicknameTaken(String nickname) {
-		return guestNicknameMap.containsValue(nickname);
-	}
-
 }
