@@ -1,4 +1,4 @@
-package com.xblog.chat.enterchat;
+package com.xblog.chat.chat;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -21,12 +21,12 @@ public class EnterChatController {
 	}
 
 	@MessageMapping("/chat/enter/{roomId}")
-	@SendTo("/chat/{roomId}")
+	@SendTo("/topic/{roomId}")
 	public String enterChat(@DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
 		return enterChatService.enterRoom(roomId, headerAccessor);
 	}
 
-	@MessageMapping("/chat/enter")
+	@MessageMapping("/chat/exit")
 	public void exit(Message message, SimpMessageHeaderAccessor headerAccessor) {
 
 	}

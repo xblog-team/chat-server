@@ -1,10 +1,13 @@
-package com.xblog.chat.enterchat;
+package com.xblog.chat.chat;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.lang.Nullable;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +36,16 @@ public class EnterChatService {
 
 		log.info("enterChat nickname: {}", nickname);
 		String roomId = chatRoom.getId();
+		log.info(roomId);
 
-		messagingTemplate.convertAndSendToUser(sessionId, "/queue/findRoom", roomId);
+		messagingTemplate.convertAndSend("/user/" + sessionId + "/queue/findRoom", roomId);
+		messagingTemplate.convertAndSendToUser(sessionId, "/queue/findRoom", roomId, createHeaders(
+			headerAccessor.getSessionId()));
 	}
 
 	public String enterRoom(String roomId, SimpMessageHeaderAccessor headerAccessor) {
-		String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");
+		String nickname = (String)headerAccessor.getSessionAttributes().get("nickname");
+		log.info(nickname);
 
 		return nickname + "님이 " + roomId + " 채팅방에 입장하셨습니다.";
 	}
@@ -60,6 +67,13 @@ public class EnterChatService {
 		return nickname;
 	}
 
+	private MessageHeaders createHeaders(@Nullable String sessionId) {
+		SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+		if (sessionId != null)
+			headerAccessor.setSessionId(sessionId);
+		headerAccessor.setLeaveMutable(true);
+		return headerAccessor.getMessageHeaders();
+	}
 }
 
 
