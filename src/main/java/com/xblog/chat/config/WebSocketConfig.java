@@ -10,7 +10,6 @@ import com.xblog.chat.interceptor.ChatHandshakeInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker
-
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
@@ -22,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/chat")
-			.setAllowedOrigins("*")
+			.setAllowedOrigins("http://localhost:8080")
 			.addInterceptors(new ChatHandshakeInterceptor())
 			.withSockJS();
 	}
