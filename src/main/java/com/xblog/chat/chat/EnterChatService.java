@@ -30,7 +30,7 @@ public class EnterChatService {
 
 		ChatRoom chatRoom = userService.getChatRoomMap().get(sessionId);
 		if (Objects.isNull(chatRoom)) {
-			userService.enterChat(sessionId);
+			userService.enterChat(sessionId, nickname);
 			chatRoom = userService.getChatRoomMap().get(sessionId);
 		}
 
@@ -38,7 +38,6 @@ public class EnterChatService {
 		String roomId = chatRoom.getId();
 		log.info(roomId);
 
-		messagingTemplate.convertAndSend("/user/" + sessionId + "/queue/findRoom", roomId);
 		messagingTemplate.convertAndSendToUser(sessionId, "/queue/findRoom", roomId, createHeaders(
 			headerAccessor.getSessionId()));
 	}

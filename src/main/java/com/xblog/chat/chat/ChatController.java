@@ -1,6 +1,5 @@
 package com.xblog.chat.chat;
 
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -16,7 +15,7 @@ public class ChatController {
 
 	@MessageMapping("/chat/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public String chat(@DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor, String message) {
+	public String chat(SimpMessageHeaderAccessor headerAccessor, String message) {
 		return chatService.chat(headerAccessor, message);
 	}
 
