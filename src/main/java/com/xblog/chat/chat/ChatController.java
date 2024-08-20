@@ -5,6 +5,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import com.xblog.chat.message.ChatMessage;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -15,7 +17,7 @@ public class ChatController {
 
 	@MessageMapping("/chat/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public String chat(SimpMessageHeaderAccessor headerAccessor, String message) {
+	public ChatMessage chat(SimpMessageHeaderAccessor headerAccessor, String message) {
 		return chatService.chat(headerAccessor, message);
 	}
 

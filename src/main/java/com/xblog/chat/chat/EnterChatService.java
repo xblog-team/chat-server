@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.xblog.chat.chatroom.ChatRoom;
+import com.xblog.chat.message.ChatMessage;
 import com.xblog.chat.user.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,11 +43,11 @@ public class EnterChatService {
 			headerAccessor.getSessionId()));
 	}
 
-	public String enterRoom(String roomId, SimpMessageHeaderAccessor headerAccessor) {
+	public ChatMessage enterRoom(String roomId, SimpMessageHeaderAccessor headerAccessor) {
 		String nickname = (String)headerAccessor.getSessionAttributes().get("nickname");
 		log.info(nickname);
 
-		return nickname + "님이 " + roomId + " 채팅방에 입장하셨습니다.";
+		return new ChatMessage(nickname, "님이 입장하셨습니다.");
 	}
 
 	public String setNickname(SimpMessageHeaderAccessor headerAccessor) {

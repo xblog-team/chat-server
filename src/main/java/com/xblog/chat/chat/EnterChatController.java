@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import com.xblog.chat.message.ChatMessage;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -22,7 +24,7 @@ public class EnterChatController {
 
 	@MessageMapping("/chat/enter/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public String enterChat(@DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
+	public ChatMessage enterChat(@DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
 		return enterChatService.enterRoom(roomId, headerAccessor);
 	}
 
