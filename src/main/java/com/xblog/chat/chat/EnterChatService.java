@@ -47,7 +47,7 @@ public class EnterChatService {
 		String nickname = (String)headerAccessor.getSessionAttributes().get("nickname");
 		log.info(nickname);
 
-		return new ChatMessage(nickname, "님이 입장하셨습니다.");
+		return new ChatMessage(nickname, "님이 " + roomId + "에 입장하셨습니다.");
 	}
 
 	public String setNickname(SimpMessageHeaderAccessor headerAccessor) {
