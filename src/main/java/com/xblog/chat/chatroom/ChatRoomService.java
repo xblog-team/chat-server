@@ -18,6 +18,10 @@ public class ChatRoomService {
 		return availableRoom.orElse(createChatRoom());
 	}
 
+	public ChatRoom getRoom(String roomId) {
+		return rooms.get(roomId);
+	}
+
 	public ChatRoom createChatRoom() {
 		String roomId = createChatRoomId();
 		while (rooms.containsKey(roomId)) {
