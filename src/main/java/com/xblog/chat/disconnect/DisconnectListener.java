@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import com.xblog.chat.chat.enterchat.ExitChatService;
 import com.xblog.chat.user.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DisconnectListener implements ApplicationListener<SessionDisconnectEvent> {
 	private final UserService userService;
+	private final ExitChatService exitChatService;
 
 	@Override
 	public void onApplicationEvent(SessionDisconnectEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String sessionId = headerAccessor.getSessionId();
+		exitChatService.exitRoom(sessionId, headerAccessor);
+
 		String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");
 
 		userService.exitChat(sessionId, nickname);

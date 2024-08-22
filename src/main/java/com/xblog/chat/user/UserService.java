@@ -8,6 +8,9 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.xblog.chat.annotation.ChatRoomMemberUpdate;
+import com.xblog.chat.annotation.SessionId;
+import com.xblog.chat.aspect.ExtractType;
 import com.xblog.chat.chatroom.ChatRoom;
 import com.xblog.chat.chatroom.ChatRoomService;
 import com.xblog.chat.exception.NicknameNotExistException;
@@ -29,14 +32,16 @@ public class UserService {
 
 	private final Map<String, String> guestNickNames = new ConcurrentHashMap<>();
 
-	public void enterChat(String sessionId, String nickname) {
+	@ChatRoomMemberUpdate(ExtractType.AFTER)
+	public void enterChat(@SessionId String sessionId, String nickname) {
 		ChatRoom chatRoom = chatRoomService.findAvailableRoom();
-		chatRoom.addSession(sessionId);
+		chatRoom.addSession(sessionId, nickname);
 		chatRoomMap.put(sessionId, chatRoom);
 		userMap.put(nickname, sessionId);
 	}
 
-	public void exitChat(String sessionId, String nickname) {
+	@ChatRoomMemberUpdate(ExtractType.BEFORE)
+	public void exitChat(@SessionId String sessionId, String nickname) {
 		ChatRoom room = chatRoomMap.get(sessionId);
 		room.removeSession(sessionId);
 		chatRoomService.removeRoomIfEmpty(room);
