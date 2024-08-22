@@ -1,4 +1,4 @@
-package com.xblog.chat.chat;
+package com.xblog.chat.chat.whisperchat;
 
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.MessageHeaders;

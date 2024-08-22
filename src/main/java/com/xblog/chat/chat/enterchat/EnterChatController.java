@@ -1,6 +1,5 @@
-package com.xblog.chat.chat;
+package com.xblog.chat.chat.enterchat;
 
-import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -26,10 +25,5 @@ public class EnterChatController {
 	@SendTo("/topic/{roomId}")
 	public ChatMessage enterChat(@DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
 		return enterChatService.enterRoom(roomId, headerAccessor);
-	}
-
-	@MessageMapping("/chat/exit")
-	public void exit(Message message, SimpMessageHeaderAccessor headerAccessor) {
-
 	}
 }

@@ -1,4 +1,4 @@
-package com.xblog.chat.chat;
+package com.xblog.chat.chat.normalchat;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
