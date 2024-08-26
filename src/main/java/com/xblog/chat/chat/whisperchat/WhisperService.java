@@ -1,4 +1,4 @@
-package com.xblog.chat.chat;
+package com.xblog.chat.chat.whisperchat;
 
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.MessageHeaders;
@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.xblog.chat.message.ChatMessage;
 import com.xblog.chat.message.WhisperMessage;
 import com.xblog.chat.user.UserService;
 
@@ -26,15 +27,16 @@ public class WhisperService {
 		String senderSessionId = headerAccessor.getSessionId();
 		String receiverSessionId = userService.getUserMap().get(receiver);
 
-		String messageForSender;
+		ChatMessage messageForSender;
+
 
 		if (StringUtils.hasText(receiverSessionId)) {
-			messageForSender = "To " + receiver + ": " + whisperMessage.getContent();
-			String message = nickname + ": " + whisperMessage.getContent();
+			messageForSender = new ChatMessage(receiver, "에게: " + whisperMessage.getContent());
+			ChatMessage message = new ChatMessage(nickname, whisperMessage.getContent());
 			messagingTemplate.convertAndSendToUser(receiverSessionId, "/queue/whisper", message, createHeaders(
 				receiverSessionId));
 		} else {
-			messageForSender = receiver + "가 존재하지 않습니다.";
+			messageForSender = new ChatMessage(receiver, "가 존재하지 않습니다.");
 		}
 
 		messagingTemplate.convertAndSendToUser(senderSessionId, "/queue/whisper", messageForSender,

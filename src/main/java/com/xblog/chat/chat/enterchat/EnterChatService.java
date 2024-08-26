@@ -1,4 +1,4 @@
-package com.xblog.chat.chat;
+package com.xblog.chat.chat.enterchat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,11 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.xblog.chat.annotation.ChatRoomMemberUpdate;
+import com.xblog.chat.annotation.RoomId;
+import com.xblog.chat.aspect.ExtractType;
 import com.xblog.chat.chatroom.ChatRoom;
+import com.xblog.chat.message.ChatMessage;
 import com.xblog.chat.user.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,11 +46,12 @@ public class EnterChatService {
 			headerAccessor.getSessionId()));
 	}
 
-	public String enterRoom(String roomId, SimpMessageHeaderAccessor headerAccessor) {
+	@ChatRoomMemberUpdate(ExtractType.BEFORE)
+	public ChatMessage enterRoom(@RoomId String roomId, SimpMessageHeaderAccessor headerAccessor) {
 		String nickname = (String)headerAccessor.getSessionAttributes().get("nickname");
 		log.info(nickname);
 
-		return nickname + "님이 " + roomId + " 채팅방에 입장하셨습니다.";
+		return new ChatMessage(nickname, "님이 " + roomId + "에 입장하셨습니다.");
 	}
 
 	public String setNickname(SimpMessageHeaderAccessor headerAccessor) {
