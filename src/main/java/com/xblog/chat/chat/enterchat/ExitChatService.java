@@ -10,12 +10,22 @@ import com.xblog.chat.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 채팅 퇴장에 사용되는 서비스
+ *
+ * @author : 강경훈
+ * @version : 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class ExitChatService {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final UserService userService;
 
+	/**
+	 * 채팅 퇴장 메시지를 채팅방에 보낸다.
+	 * @since 1.0.0
+	 */
 	public void exitRoom(String sessionId, SimpMessageHeaderAccessor headerAccessor) {
 		String nickname = userService.getNickname(headerAccessor);
 		ChatRoom room = userService.getChatRoomMap().get(sessionId);

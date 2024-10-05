@@ -11,9 +11,20 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * WEBSOCKET 의 handshake 전 후의 동작을 적용할 인터셉터
+ *
+ * @author : 강경훈
+ * @version : 1.0.0
+ */
 @RequiredArgsConstructor
 public class ChatHandshakeInterceptor implements HandshakeInterceptor {
 
+	/**
+	 * 핸드셰이크 체결 전 헤더에서 userId와 userRole 을 추출하여 세션 attribute 에 저장한다.
+	 *
+	 * @since 1.0.0
+	 */
 	@Override
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 		Map<String, Object> attributes) throws Exception {
@@ -23,9 +34,19 @@ public class ChatHandshakeInterceptor implements HandshakeInterceptor {
 			attributes.put("userId", userId);
 		}
 
+		List<String> xUserRoles = request.getHeaders().get("X-USER-ROLE");
+		if (xUserRoles != null && !xUserRoles.isEmpty()) {
+			attributes.put("roles", xUserRoles);
+		}
+
 		return true;
 	}
 
+	/**
+	 * 핸드셰이크 체결 후 동작.
+	 *
+	 * @since 1.0.0
+	 */
 	@Override
 	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 		Exception exception) {
